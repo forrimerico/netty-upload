@@ -1,6 +1,4 @@
-package entity;
-
-import com.sun.org.apache.bcel.internal.classfile.ConstantValue;
+package upload.entity;
 
 import java.io.File;
 import java.io.Serializable;
@@ -12,6 +10,15 @@ public class FileUploadEntity implements Serializable {
     private byte[] bytes;// 文件字节数组
     private int dataLength;// 数据长度
     private int headData = 0x76; // 自定义消息流开始的标志
+    private boolean heart = false;
+
+    public boolean isHeart() {
+        return heart;
+    }
+
+    public void setHeart(boolean heart) {
+        this.heart = heart;
+    }
 
     public int getHeadData() {
         return headData;

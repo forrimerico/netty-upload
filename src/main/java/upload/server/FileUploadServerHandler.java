@@ -1,5 +1,5 @@
-package server;
-import entity.FileUploadEntity;
+package upload.server;
+import upload.entity.FileUploadEntity;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -38,6 +38,7 @@ public class FileUploadServerHandler extends SimpleChannelInboundHandler<FileUpl
 
         FileUploadEntity ef = fileUploadEntity;
         byte[] bytes = ef.getBytes();
+
         byteRead = ef.getDataLength();//dataLength 每次接收到的数据长度
         System.out.println("byteRead=>" + byteRead);
         String md5 = ef.getFileName();

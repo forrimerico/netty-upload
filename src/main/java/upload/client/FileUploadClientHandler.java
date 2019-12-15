@@ -1,12 +1,13 @@
-package client;
-import entity.FileUploadEntity;
+package upload.client;
+import upload.entity.FileUploadEntity;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Random;
 
 
 /**
@@ -15,6 +16,7 @@ import java.io.RandomAccessFile;
  */
 public class FileUploadClientHandler extends SimpleChannelInboundHandler<FileUploadEntity> {
 
+    private int baseRandom = 8;
     private int byteRead;
     private volatile int start = 0;//数据读取的起始位置
     private volatile int dataLength = 0;//需读取的数据长度
@@ -26,7 +28,9 @@ public class FileUploadClientHandler extends SimpleChannelInboundHandler<FileUpl
     private int ping_pong_times = 0;//客户端与服务端交互次数记录
     private final int dataGrameNum = 10;//数据段数
     private int dataGrameLength = 0;//数据段数长度
+    private Random random = new Random();
 
+    private Channel channel;
     /**
      * 这个是初始化类
      * 主要的功能是读取要上传的文件，其大小，以及需要分割成几片。
@@ -71,8 +75,8 @@ public class FileUploadClientHandler extends SimpleChannelInboundHandler<FileUpl
                 System.out.println();
                 System.out.println();
             } else {
-
                 System.out.println("channelActive=》文件已经读完");
+
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

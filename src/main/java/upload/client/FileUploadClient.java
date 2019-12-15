@@ -1,15 +1,13 @@
-package client;
+package upload.client;
 
-import entity.FileUploadEntity;
-import entity.FileUploadEntityDecoder;
-import entity.FileUploadEntityEncoder;
+import upload.entity.FileUploadEntity;
+import upload.entity.FileUploadEntityEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,9 +33,7 @@ public class FileUploadClient {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
                             ch.pipeline().addLast(new FileUploadEntityEncoder());
-                            ch.pipeline().addLast(new FileUploadEntityDecoder());
-//                            ch.pipeline().addLast(new ObjectEncoder());
-//                            ch.pipeline().addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(null)));
+                            ch.pipeline().addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(null)));
                             ch.pipeline().addLast(new FileUploadClientHandler(fileUploadEntity));
                         }
                     });
@@ -67,18 +63,18 @@ public class FileUploadClient {
              */
             //构建上传文件对象
             List<File> files = getFiles("E:\\游玩\\青山湖接力跑\\video");
-//            File f = new File(file_name);
-            for (File f : files) {
-                System.out.println(f.getName());
-                FileUploadEntity uploadFile = new FileUploadEntity();
+            File f = new File(file_name);
+//            for (File f : files) {
+            System.out.println(f.getName());
+            FileUploadEntity uploadFile = new FileUploadEntity();
 
-                String fileName = f.getName();// 文件名
-                uploadFile.setFile(f);
-                uploadFile.setFileName(fileName);
+            String fileName = f.getName();// 文件名
+            uploadFile.setFile(f);
+            uploadFile.setFileName(fileName);
 
-                //连接到服务器 并上传
-                new FileUploadClient().connect(port, "127.0.0.1", uploadFile);
-            }
+            //连接到服务器 并上传
+            new FileUploadClient().connect(port, "127.0.0.1", uploadFile);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

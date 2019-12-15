@@ -1,4 +1,4 @@
-package entity;
+package upload.entity;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

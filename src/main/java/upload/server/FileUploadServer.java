@@ -1,7 +1,6 @@
-package server;
+package upload.server;
 
-import entity.FileUploadEntityDecoder;
-import entity.FileUploadEntityEncoder;
+import upload.entity.FileUploadEntityDecoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -9,8 +8,6 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 
@@ -31,12 +28,10 @@ public class FileUploadServer {
                             // 这里实现了自定义的编解码
                             // 但是由于只定义了开始位置的字节码，数据长度，以及数据，没有去定义这个文件名称，以及后缀
                             // 所以导致存的文件名是一个null。修改了后缀的扩展名，发现会是一个图片。这里在encode和decode里还要在定义一下文件名称。
-                            ch.pipeline().addLast(new FileUploadEntityEncoder());
                             ch.pipeline().addLast(new FileUploadEntityDecoder());
+                            ch.pipeline().addLast(new ObjectEncoder());
                             // 实现心跳机制的代码
                             ch.pipeline().addLast(new IdleStateHandler(2,2,2, TimeUnit.SECONDS));
-//                            ch.pipeline().addLast(new ObjectEncoder());
-//                            ch.pipeline().addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(null)));
                             ch.pipeline().addLast(new FileUploadServerHandler());
                         }
                     });
