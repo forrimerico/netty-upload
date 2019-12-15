@@ -14,12 +14,6 @@ public class FileUploadEntityDecoder extends ByteToMessageDecoder {
 
         // 可读长度必须大于基本长度
         if (buffer.readableBytes() >= BASE_LENGTH) {
-            // 防止socket字节流攻击
-            // 防止，客户端传来的数据过大
-            // 因为，太大的数据，是不合理的
-//            if (buffer.readableBytes() > 2048) {
-//                buffer.skipBytes(buffer.readableBytes());
-//            }
 
             // 记录包头开始的index
             int beginReader;
@@ -49,7 +43,7 @@ public class FileUploadEntityDecoder extends ByteToMessageDecoder {
 
             // 消息的长度
             int length = buffer.readInt();
-            // 判断请求数据包数据是否到齐
+            // 判断请求数据包数据是否到齐 解决拆包问题
             if (buffer.readableBytes() < length) {
                 // 还原读指针
                 buffer.readerIndex(beginReader);

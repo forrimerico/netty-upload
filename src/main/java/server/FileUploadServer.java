@@ -12,6 +12,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class FileUploadServer {
@@ -30,6 +33,8 @@ public class FileUploadServer {
                             // 所以导致存的文件名是一个null。修改了后缀的扩展名，发现会是一个图片。这里在encode和decode里还要在定义一下文件名称。
                             ch.pipeline().addLast(new FileUploadEntityEncoder());
                             ch.pipeline().addLast(new FileUploadEntityDecoder());
+                            // 实现心跳机制的代码
+                            ch.pipeline().addLast(new IdleStateHandler(2,2,2, TimeUnit.SECONDS));
 //                            ch.pipeline().addLast(new ObjectEncoder());
 //                            ch.pipeline().addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(null)));
                             ch.pipeline().addLast(new FileUploadServerHandler());

@@ -34,6 +34,8 @@ public class FileUploadServerHandler extends SimpleChannelInboundHandler<FileUpl
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileUploadEntity fileUploadEntity) throws Exception {
+
+
         FileUploadEntity ef = fileUploadEntity;
         byte[] bytes = ef.getBytes();
         byteRead = ef.getDataLength();//dataLength 每次接收到的数据长度
@@ -47,6 +49,7 @@ public class FileUploadServerHandler extends SimpleChannelInboundHandler<FileUpl
         //修改初始值 记录下次要从哪个位置读数据，并返回给客户端 告诉客户端下一次从文件的哪个位置开始传
         start = start + byteRead;
         if (byteRead > 0) {
+            // 用了自定义的编解码类，发现这里返回的数据，客户端收不到
             System.out.println("返回给客户端数据=》" + start);
             ctx.writeAndFlush(start);//写回客户端
         } else {
